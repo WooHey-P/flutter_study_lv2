@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:study_ui_example/user/view/login_screen.dart';
+import 'package:flutter_study_lv2/user/view/login_screen.dart';
 
 void main() {
   runApp(

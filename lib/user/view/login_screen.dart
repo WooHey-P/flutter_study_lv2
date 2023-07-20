@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:study_ui_example/colors.dart';
-import 'package:study_ui_example/common/layout/default_layout.dart';
+import 'package:flutter_study_lv2/colors.dart';
+import 'package:flutter_study_lv2/common/layout/default_layout.dart';
 
 import '../../common/component/custom_form_text_field.dart';
 
