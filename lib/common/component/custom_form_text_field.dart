@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../colors.dart';
 
 class CustomTextFormField extends StatelessWidget {
+  final String? initialValue;
   final String? hintText;
   final String? errorText;
   final bool obscureText;
@@ -10,6 +11,7 @@ class CustomTextFormField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
 
   const CustomTextFormField({
+    this.initialValue,
     this.hintText,
     this.errorText,
     this.obscureText = false,
@@ -30,6 +32,8 @@ class CustomTextFormField extends StatelessWidget {
     );
 
     return TextFormField(
+      // 초기값
+      initialValue: initialValue,
       cursorColor: PRIMARY_COLOR,
       // 비밀번호 입력 시 텍스트 숨김
       obscureText: obscureText,
