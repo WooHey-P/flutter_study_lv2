@@ -25,10 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final dio = Dio();
-    final emulLocalhost = "10.0.2.2:3000";
-    final simulLocalhost = "127.0.0.2:3000";
 
-    final ip = Platform.isIOS ? simulLocalhost : emulLocalhost;
 
     return DefaultLayout(
       // SafeArea: 상단 상태바, 하단 네비게이션 바 등의 영역을 제외한 영역
@@ -103,17 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    final refreshtk = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTY4OTg1NzcwNCwiZXhwIjoxNjg5OTQ0MTA0fQ.TMejlFItmVwYL0WGwWe8SfJMYc0yuV3ae-CM8f1AXTM";
 
-                    final resp = await dio.post("http://$ip/auth/token",
-                        options: Options(
-                            headers: {
-                              "authorization": "Bearer $refreshtk",
-                            }
-                        )
-                    );
-
-                    print(resp.data);
                   },
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.black,
