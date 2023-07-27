@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
 
 
-    final dio = Dio();>
+    final dio = Dio();
 
     try {
       final resp = await dio.post("http://$ip/auth/token",
@@ -42,6 +42,8 @@ class _SplashScreenState extends State<SplashScreen> {
               }
           )
       );
+
+      await storage.write(key: ACCESS_TOKEN_KEY, value: resp.data['accessToken']);
 
       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => RootTab()), (route) => false);
     } catch (e) {

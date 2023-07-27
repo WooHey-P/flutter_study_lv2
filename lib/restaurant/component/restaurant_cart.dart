@@ -6,31 +6,26 @@ class RestauantCard extends StatelessWidget {
 
   // 레스토랑 이름
   final String name;
-
   // 태그
   final List<String> tags;
-
   // 평점 개수
-  final int ratingCount;
-
+  final int ratingsCount;
   // 배솔 걸리는 시간
   final int deliveryTime;
-
   // 배송 비용
   final int deliveryFee;
-
   // 평균 평점
-  final double averageRating;
+  final double ratings;
 
   const RestauantCard(
       {super.key,
       required this.image,
       required this.name,
       required this.tags,
-      required this.ratingCount,
+      required this.ratingsCount,
       required this.deliveryTime,
       required this.deliveryFee,
-      required this.averageRating});
+      required this.ratings});
 
   @override
   Widget build(BuildContext context) {
@@ -64,12 +59,12 @@ class RestauantCard extends StatelessWidget {
               children: [
                 _IconText(
                   icon: Icons.star,
-                  label: '$averageRating',
+                  label: '$ratings',
                 ),
                 renderDot(),
                 _IconText(
                     icon: Icons.receipt,
-                    label: '$ratingCount',
+                    label: '$ratingsCount',
                 ),
                 renderDot(),
                 _IconText(
