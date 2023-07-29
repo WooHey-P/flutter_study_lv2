@@ -18,6 +18,11 @@ class RestaurantCard extends StatelessWidget {
   final int deliveryFee;
   // 평균 평점
   final double ratings;
+  // 디테일 화면인지
+  final bool isDetail;
+  // 상세 내용
+  final String? detail;
+
 
   const RestaurantCard(
       {super.key,
@@ -27,9 +32,16 @@ class RestaurantCard extends StatelessWidget {
       required this.ratingsCount,
       required this.deliveryTime,
       required this.deliveryFee,
-      required this.ratings});
+      required this.ratings,
+      this.isDetail = false,
+      this.detail,
+      }
+);
 
-  factory RestaurantCard.fromModel({required RestaurantModel model}) {
+  factory RestaurantCard.fromModel({
+    required RestaurantModel model,
+    bool isDetail = false,
+  }) {
     return RestaurantCard (
       image: Image.network(
         model.thumbUrl,
@@ -42,6 +54,7 @@ class RestaurantCard extends StatelessWidget {
       deliveryTime: model.deliveryTime,
       deliveryFee: model.deliveryFee,
       ratings: model.ratings,
+      isDetail: isDetail,
     );
   }
 
@@ -49,55 +62,66 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        if (isDetail)
+          image,
+        if (!isDetail)
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: image,
         ),
         const SizedBox(height: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              name,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: isDetail ? 16 : 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                name,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              tags.join(' | '),
-              style: TextStyle(
-                fontSize: 14,
-                color: BODY_TEXT_COLOR,
+              const SizedBox(height: 8),
+              Text(
+                tags.join(' | '),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: BODY_TEXT_COLOR,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                _IconText(
-                  icon: Icons.star,
-                  label: '$ratings',
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  _IconText(
+                    icon: Icons.star,
+                    label: '$ratings',
+                  ),
+                  renderDot(),
+                  _IconText(
+                      icon: Icons.receipt,
+                      label: '$ratingsCount',
+                  ),
+                  renderDot(),
+                  _IconText(
+                    icon: Icons.timelapse_outlined,
+                    label: '$deliveryTime 분',
+                  ),
+                  renderDot(),
+                  _IconText(
+                    icon: Icons.monetization_on,
+                    // 배달비가 0원이면 무료 배달
+                    label: deliveryFee == 0 ? '무료' : '$deliveryFee 원',
+                  ),
+                ],
+              ),
+              if (detail != null && isDetail)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(detail!),
                 ),
-                renderDot(),
-                _IconText(
-                    icon: Icons.receipt,
-                    label: '$ratingsCount',
-                ),
-                renderDot(),
-                _IconText(
-                  icon: Icons.timelapse_outlined,
-                  label: '$deliveryTime 분',
-                ),
-                renderDot(),
-                _IconText(
-                  icon: Icons.monetization_on,
-                  // 배달비가 0원이면 무료 배달
-                  label: deliveryFee == 0 ? '무료' : '$deliveryFee 원',
-                ),
-              ],
-            )
-          ],
+            ],
+          ),
         )
       ],
     );
