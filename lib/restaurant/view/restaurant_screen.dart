@@ -38,21 +38,7 @@ class RestaurantScreen extends StatelessWidget {
                 return ListView.separated(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (_, index) {
-                    final pItem = RestaurantModel.fromJson(snapshot.data![index]);
-
-                    return RestauantCard(
-                      image: Image.network(
-                        pItem.thumbUrl,
-                        height: 150,
-                        fit: BoxFit.cover,
-                      ),
-                      name: pItem.name,
-                      tags: pItem.tags,
-                      ratingsCount: pItem.ratingsCount,
-                      deliveryTime: pItem.deliveryTime,
-                      deliveryFee: pItem.deliveryFee,
-                      ratings: pItem.ratings,
-                    );
+                    return RestaurantCard.fromModel(model: RestaurantModel.fromJson(snapshot.data![index]));
                   },
                   separatorBuilder: (_, index) => const SizedBox(height: 16),
                 );
