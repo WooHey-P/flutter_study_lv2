@@ -17,16 +17,6 @@ class RestaurantDetailScreen extends StatelessWidget {
           renderProducts(),
           ],
         )
-
-        // Column(
-      //   children: [
-
-      //     Padding(
-      //       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      //       child: ProductCard(),
-      //     ),
-      //   ],
-      // ),
     );
   }
 
