@@ -58,7 +58,7 @@ class Product {
     return Product(
       id: json['id'],
       name: json['name'],
-      imgUrl: 'http://$ip${json['imgUrl']},
+      imgUrl: 'http://$ip${json['imgUrl']}',
       detail: json['detail'],
       price: json['price'],
     );
