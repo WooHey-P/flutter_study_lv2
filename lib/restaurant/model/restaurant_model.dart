@@ -2,6 +2,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../common/const/data.dart';
+import '../../common/utils/data_utils.dart';
 
 part 'restaurant_model.g.dart';
 
@@ -17,7 +18,7 @@ class RestaurantModel {
   final String name;
   @JsonKey(
     // pathToUrl 이 반환된 값이 다시 저장됨
-    fromJson: pahToUrl,
+    fromJson: DataUtils.pahToUrl,
   )
   final String thumbUrl;
   final List<String> tags;
@@ -40,11 +41,5 @@ class RestaurantModel {
   });
 
   factory RestaurantModel.fromJson(Map<String, dynamic> json) => _$RestaurantModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$RestaurantModelToJson(this);
-
-  static pahToUrl(String url) {
-    return 'http://$ip$url';
-  }
 
 }

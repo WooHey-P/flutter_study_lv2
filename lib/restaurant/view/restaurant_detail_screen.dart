@@ -4,8 +4,10 @@ import 'package:flutter_study_lv2/common/layout/default_layout.dart';
 import 'package:flutter_study_lv2/product/component/product_card.dart';
 import 'package:flutter_study_lv2/restaurant/component/restaurant_cart.dart';
 import 'package:flutter_study_lv2/restaurant/model/restaurant_detail_model.dart';
+import 'package:flutter_study_lv2/restaurant/repository/restaurant_repository.dart';
 
 import '../../common/const/data.dart';
+import '../../common/dio/dio.dart';
 
 class RestaurantDetailScreen extends StatelessWidget {
   // 레스토랑 아이디
@@ -13,38 +15,38 @@ class RestaurantDetailScreen extends StatelessWidget {
 
   const RestaurantDetailScreen({super.key, required this.id});
 
-  Future<Map<String, dynamic>> getRestaurantDetail() async {
+  Future<RestaurantDetailModel> getRestaurantDetail() async {
     final dio = Dio();
-    final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
+    dio.interceptors.add(CustomInterceptor(storage: storage));
 
-    final resp = await dio.get('http://$ip/restaurant/$id', options: Options(
-      headers: {
-        'authorization': 'Bearer $accessToken'
-      }
-    ));
-    return resp.data;
+    final repository = RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant');
+    return repository.getRestaurantDetail(id: id);
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
       title: '레스토랑 상세',
-      child: FutureBuilder<Map<String, dynamic>>(
+      child: FutureBuilder<RestaurantDetailModel>(
         future: getRestaurantDetail(),
-        builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+        builder: (context, AsyncSnapshot<RestaurantDetailModel> snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('데이터를 불러오는데 실패했습니다.'),
+            );
+          }
+
           if (!snapshot.hasData) {
             return Center(
                 child: CircularProgressIndicator()
             );
           }
 
-          final item = RestaurantDetailModel.fromJson(json: snapshot.data!);
-
           return CustomScrollView(
             slivers: [
-              renderTop(item: item),
+              renderTop(item: snapshot.data!),
               renderLable(),
-              renderProducts(products: item.products),
+              renderProducts(products: snapshot.data!.products),
             ],
           );
         },
@@ -76,7 +78,7 @@ class RestaurantDetailScreen extends StatelessWidget {
     );
   }
 
-  renderProducts({required List<Product> products}) {
+  renderProducts({required List<ProductModel> products}) {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       sliver: SliverList(

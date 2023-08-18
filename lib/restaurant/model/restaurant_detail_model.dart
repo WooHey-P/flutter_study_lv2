@@ -1,10 +1,15 @@
 import 'package:flutter_study_lv2/restaurant/model/restaurant_model.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import '../../common/const/data.dart';
+import '../../common/utils/data_utils.dart';
 
+part 'restaurant_detail_model.g.dart';
+
+@JsonSerializable()
 class RestaurantDetailModel extends RestaurantModel {
   final String detail;
-  final List<Product> products;
+  final List<ProductModel> products;
   
   RestaurantDetailModel ({
     required super.id,
@@ -20,33 +25,23 @@ class RestaurantDetailModel extends RestaurantModel {
     required this.products,
   });
 
-  factory RestaurantDetailModel.fromJson({
-    required Map<String, dynamic> json
-  }) {
-    return RestaurantDetailModel(
-      id: json['id'],
-      name: json['name'],
-      thumbUrl: 'http://$ip${json['thumbUrl']}',
-      tags: List<String>.from(json['tags']),
-      priceRange: RestaurantPriceRange.values.firstWhere((element) => element.name == json['priceRange']),
-      ratings: json['ratings'].toDouble(),
-      ratingsCount: json['ratingsCount'],
-      deliveryTime: json['deliveryTime'],
-      deliveryFee: json['deliveryFee'],
-      detail: json['detail'],
-      products: List<Product>.from(json['products'].map<Product>((product) => Product.fromJson(json: product))),
-    );
-  }
+  factory RestaurantDetailModel.fromJson(Map<String, dynamic> json) => _$RestaurantDetailModelFromJson(json);
+  Map<String, dynamic> toJson() => _$RestaurantDetailModelToJson(this);
+
 }
 
-class Product {
+@JsonSerializable()
+class ProductModel {
   final String id;
   final String name;
+  @JsonKey(
+    fromJson: DataUtils.pahToUrl,
+  )
   final String imgUrl;
   final String detail;
   final int price;
 
-  Product({
+  ProductModel({
     required this.id,
     required this.name,
     required this.imgUrl,
@@ -54,13 +49,6 @@ class Product {
     required this.price,
   });
 
-  factory Product.fromJson({required Map<String, dynamic> json}) {
-    return Product(
-      id: json['id'],
-      name: json['name'],
-      imgUrl: 'http://$ip${json['imgUrl']}',
-      detail: json['detail'],
-      price: json['price'],
-    );
-  }
+  factory ProductModel.fromJson(Map<String, dynamic> json) => _$ProductModelFromJson(json);
+  Map<String, dynamic> toJson() => _$ProductModelToJson(this);
 }
