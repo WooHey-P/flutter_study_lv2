@@ -1,7 +1,18 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_study_lv2/common/const/data.dart';
+import 'package:flutter_study_lv2/common/secure_storage/secure_storage.dart';
 
-import '../const/data.dart';
+// 캐싱을 따로 로직 안에서 해야되는 경우가 아니라면
+// 관련 변수 또는 클래스가 선언된 곳에 provider 를 추가하는게 편함
+final dioProvider = Provider((ref) {
+  final dio = Dio();
+  final storage = ref.watch(secureStorageProvider);
+
+  dio.interceptors.add(CustomInterceptor(storage: storage));
+  return dio;
+});
 
 class CustomInterceptor extends Interceptor {
   final FlutterSecureStorage storage;

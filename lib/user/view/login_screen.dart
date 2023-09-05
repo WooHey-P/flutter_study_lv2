@@ -3,29 +3,31 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_study_lv2/colors.dart';
 import 'package:flutter_study_lv2/common/const/data.dart';
+import 'package:flutter_study_lv2/common/dio/dio.dart';
 import 'package:flutter_study_lv2/common/layout/default_layout.dart';
+import 'package:flutter_study_lv2/common/secure_storage/secure_storage.dart';
 import 'package:flutter_study_lv2/common/view/root_tab.dart';
 
 import '../../common/component/custom_form_text_field.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   String userName = '';
   String password = '';
 
   @override
   Widget build(BuildContext context) {
-    final dio = Dio();
-
+    final dio = ref.watch(dioProvider);
+    final storage = ref.watch(secureStorageProvider);
 
     return DefaultLayout(
       // SafeArea: 상단 상태바, 하단 네비게이션 바 등의 영역을 제외한 영역

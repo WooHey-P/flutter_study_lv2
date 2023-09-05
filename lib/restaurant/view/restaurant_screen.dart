@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_study_lv2/restaurant/component/restaurant_cart.dart';
+import 'package:flutter_study_lv2/restaurant/provider/restautant_provider.dart';
 import 'package:flutter_study_lv2/restaurant/view/restaurant_detail_screen.dart';
 
 import '../../common/const/data.dart';
@@ -9,53 +11,42 @@ import '../../common/model/cursor_pagination_model.dart';
 import '../model/restaurant_model.dart';
 import '../repository/restaurant_repository.dart';
 
-class RestaurantScreen extends StatelessWidget {
+class RestaurantScreen extends ConsumerWidget {
   const RestaurantScreen({super.key});
 
-  Future<List<RestaurantModel>> paginateRestaurant() async {
-    final dio = Dio();
-    dio.interceptors.add(CustomInterceptor(storage: storage));
-
-    final repository = await RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant').paginate();
-    return repository.data;
-  }
-
   @override
-  Widget build(BuildContext context) {
-    return Container(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: FutureBuilder<List<RestaurantModel>>(
-              future: paginateRestaurant(),
-              builder: (context, AsyncSnapshot<List<RestaurantModel>> snapshot) {
-                if (!snapshot.hasData) {
-                  return CircularProgressIndicator();
-                }
-                return ListView.separated(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (_, index) {
-                    final curItem = snapshot.data![index];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final data = ref.watch(restaurantProvider);
 
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => RestaurantDetailScreen(
-                            id: curItem.id
-                          ),
-                          ),
-                        );
-                      },
-                      child: RestaurantCard.fromModel(
-                        model: curItem,
-                      )
-                    );
-                  },
-                  separatorBuilder: (_, index) => const SizedBox(height: 16),
+    // 잘못된 예외처리임!! 지금은 이렇게밖에 처리 못하기때문..
+    // 에러인지 아닌지 판단하는 로직이 필요함
+    if (data.length == 0) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: ListView.separated(
+        itemCount: data.length,
+        itemBuilder: (_, index) {
+          final curItem = data[index];
+
+          return GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => RestaurantDetailScreen(id: curItem.id),
+                  ),
                 );
               },
-            ),
-          ),
-        ));
+              child: RestaurantCard.fromModel(
+                model: curItem,
+              ));
+        },
+        separatorBuilder: (_, index) => const SizedBox(height: 16),
+      ),
+    );
   }
 }
