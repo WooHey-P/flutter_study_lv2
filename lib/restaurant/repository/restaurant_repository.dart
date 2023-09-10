@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_study_lv2/common/const/data.dart';
 import 'package:flutter_study_lv2/common/dio/dio.dart';
 import 'package:flutter_study_lv2/common/model/cursor_pagination_model.dart';
+import 'package:flutter_study_lv2/common/model/pagination_params.dart';
 import 'package:flutter_study_lv2/restaurant/model/restaurant_model.dart';
 import 'package:retrofit/http.dart';
 
@@ -25,7 +26,10 @@ abstract class RestaurantRepository {
   @Headers({
     'accessToken': 'true',
   })
-  Future<CursorPagination<RestaurantModel>> paginate();
+  Future<CursorPagination<RestaurantModel>> paginate({
+    // build time constant 이어야 함
+    @Queries() PaginationParams? params = const PaginationParams(),
+});
 
   @GET('/{id}')
   @Headers({

@@ -16,15 +16,24 @@ class RestaurantScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final data = ref.watch(restaurantProvider);
+    final resp = ref.watch(restaurantProvider);
 
     // 잘못된 예외처리임!! 지금은 이렇게밖에 처리 못하기때문..
     // 에러인지 아닌지 판단하는 로직이 필요함
-    if (data.length == 0) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
+    switch (resp.runtimeType) {
+      case CursorPaginationLoading:
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      case CursorPaginationError:
+        return Center(
+          child: Text('데이터를 불러오는데 실패했습니다.'),
+        );
     }
+
+    // TODO: 바꿔야됨!!
+    final data = (resp as CursorPagination<RestaurantModel>).data;
+
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
